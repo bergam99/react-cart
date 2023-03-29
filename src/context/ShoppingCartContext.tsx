@@ -12,8 +12,8 @@ type ShoppingCartContext = {
   increaseCartQuantity: (id: number) => void;
   decreaseCartQuantity: (id: number) => void;
   removeFromCart: (id: number) => void;
-  cartQuantity : number
-  cartItems : CartItem[]
+  cartQuantity: number;
+  cartItems: CartItem[];
 };
 
 type CartItem = {
@@ -28,40 +28,45 @@ export function useShoppingCart() {
   return useContext(ShoppingCartContext);
 }
 
-// CONTEXT
+//  CONTEXT
 export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
-    const [isOpen, setIsOpen] = useState(false);
-    // useState -> useLocalStorage
-  const [cartItems, setCartItems] = useLocalStorage<CartItem[]>("shopping-cart", []);
+  const [isOpen, setIsOpen] = useState(false);
+  // useState -> useLocalStorage
+  const [cartItems, setCartItems] = useLocalStorage<CartItem[]>(
+    "shopping-cart",
+    []
+  );
 
-  const openCart = () => setIsOpen(true)
-  const closeCart = () => setIsOpen(false)
+  const openCart = () => setIsOpen(true);
+  const closeCart = () => setIsOpen(false);
 
   const cartQuantity = cartItems.reduce(
-    (quantity, item) => item.quantity + quantity, 0
-  )
+    (quantity, item) => item.quantity + quantity,
+    0
+  );
 
   //   FUNCTIONS
   function getItemQuantity(id: number) {
-    return cartItems.find((item) => item.id)?.quantity || 0;
+    console.log('card items', cartItems)
+    return cartItems.find((item) => item.id === id)?.quantity || 0;
   }
 
   function increaseCartQuantity(id: number) {
-    setCartItems(currItems => {
-      if (currItems.find(item => item.id === id) == null) {
-        return [...currItems, { id, quantity: 1 }]
+    setCartItems((currItems) => {
+      if (currItems.find((item) => item.id === id) == null) {
+        return [...currItems, { id, quantity: 1 }];
       } else {
-        return currItems.map(item => {
+        return currItems.map((item) => {
           if (item.id === id) {
-            return { ...item, quantity: item.quantity + 1 }
+            return { ...item, quantity: item.quantity + 1 };
           } else {
-            return item
+            return item;
           }
-        })
+        });
       }
-    })
+    });
   }
-  
+
   function decreaseCartQuantity(id: number) {
     setCartItems((currItems) => {
       if (currItems.find((item) => item.id === id)?.quantity === 1) {
@@ -91,7 +96,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         increaseCartQuantity,
         decreaseCartQuantity,
         removeFromCart,
-        openCart, 
+        openCart,
         closeCart,
         cartItems,
         cartQuantity,
