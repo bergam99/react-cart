@@ -8,17 +8,16 @@ type StoreItemProps = {
   price: number;
   imgUrl: string;
 };
-const StoreItem = ({ id, name, price, imgUrl }: StoreItemProps) => {
-  // from context
-  const {
-    getItemQuantity,
-    increaseCartQuantity,
-    decreaseCartQuantity,
-    removeFromCart,
-  } = useShoppingCart();
-  const quantity = getItemQuantity(id);
-  return (
-    <>
+export function StoreItem({ id, name, price, imgUrl }: StoreItemProps) {
+    const {
+      getItemQuantity,
+      increaseCartQuantity,
+      decreaseCartQuantity,
+      removeFromCart,
+    } = useShoppingCart()
+    const quantity = getItemQuantity(id)
+  
+    return (
       <Card className="h-100">
         <Card.Img
           variant="top"
@@ -31,13 +30,9 @@ const StoreItem = ({ id, name, price, imgUrl }: StoreItemProps) => {
             <span className="fs-2">{name}</span>
             <span className="ms-2 text-muted">{formatCurrency(price)}</span>
           </Card.Title>
-          {/* condition button */}
           <div className="mt-auto">
             {quantity === 0 ? (
-              <Button
-                className="w-100"
-                onClick={() => increaseCartQuantity(id)}
-              >
+              <Button className="w-100" onClick={() => increaseCartQuantity(id)}>
                 + Add To Cart
               </Button>
             ) : (
@@ -51,11 +46,15 @@ const StoreItem = ({ id, name, price, imgUrl }: StoreItemProps) => {
                 >
                   <Button onClick={() => decreaseCartQuantity(id)}>-</Button>
                   <div>
-                    <span className="fs-3">{quantity}</span> in cart{" "}
+                    <span className="fs-3">{quantity}</span> in cart
                   </div>
-                  <Button onClick={() => increaseCartQuantity(id)}> +</Button>
+                  <Button onClick={() => increaseCartQuantity(id)}>+</Button>
                 </div>
-                <Button variant="danger" size="sm" onClick={() => removeFromCart(id)}>
+                <Button
+                  onClick={() => removeFromCart(id)}
+                  variant="danger"
+                  size="sm"
+                >
                   Remove
                 </Button>
               </div>
@@ -63,8 +62,6 @@ const StoreItem = ({ id, name, price, imgUrl }: StoreItemProps) => {
           </div>
         </Card.Body>
       </Card>
-    </>
-  );
-};
-
+    )
+  }
 export default StoreItem;
