@@ -6,3 +6,4 @@ export default defineConfig(({command})=>({
   plugins: [react()],
   base:command === 'build'? '/react-cart/' : "/"
 }))
+ 
