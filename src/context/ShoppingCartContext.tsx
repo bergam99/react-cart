@@ -102,15 +102,24 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
     });
   }
 
+// 이 함수는 장바구니에서 특정 아이템의 수량을 1 감소시키는 기능을 수행합니다.
+// 매개변수로 전달된 id 값에 해당하는 아이템을 찾아서, 해당 아이템의 수량이 1인 경우에는 아이템을 삭제하고, 그렇지 않은 경우에는 수량을 1 감소시킨 뒤 변경된 장바구니를 setCartItems 함수를 사용하여 저장합니다.
   function decreaseCartQuantity(id: number) {
+    // 변경된 장바구니를 setCartItems 함수를 사용하여 저장합니다.
     setCartItems((currItems) => {
+      // 해당 아이템의 수량이 1이면,
       if (currItems.find((item) => item.id === id)?.quantity === 1) {
+        // filter 메서드를 사용하여 현재 장바구니에서 해당 아이템을 삭제합니다.
         return currItems.filter((item) => item.id !== id);
+        // 해당 아이템의 수량이 1보다 크면, 
       } else {
+        // map 메서드를 사용하여 현재 장바구니를 새로운 배열로 만들어 반환합니다. map 메서드는 아이템을 순회하면서 id 값이 일치하는 아이템을 찾아서 수량을 1 감소시킵니다.
         return currItems.map((item) => {
           if (item.id === id) {
             return { ...item, quantity: item.quantity - 1 };
           } else {
+            // 해당 코드는 현재 장바구니에 id와 일치하는 상품이 없는 경우, currItems를 그대로 반환합니다. 즉, 장바구니에 존재하지 않는 다른 상품들은 그대로 유지됩니다. 여기서 중요한 것은, map() 메서드는 기존의 배열을 변경하지 않고 새로운 배열을 반환한다는 것입니다. 따라서 currItems 배열의 요소들은 변경되지 않습니다. map() 메서드는 새로운 배열을 반환하므로, 반환된 배열에는 수정된 요소들이 포함됩니다. 따라서 id와 일치하는 상품의 수량이 1 감소한 새로운 배열을 반환합니다. 그리고 이 새로운 배열이 setCartItems()를 호출하여, cartItems에 저장됩니다.
+            // item은 currItems.map()의 인자로 사용되는 배열의 요소입니다. currItems는 현재 장바구니 항목의 배열로, map() 함수를 사용하여 각 항목에 대해 작업을 수행합니다. 각 항목은 item 매개변수를 통해 참조됩니다. 따라서 return item;은 현재 항목을 변경하지 않고 그대로 반환하는 것을 의미합니다.
             return item;
           }
         });
@@ -118,12 +127,20 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
     });
   }
 
-  function removeFromCart(id: number) {
+  // 이 함수는 장바구니에서 특정 상품을 제거하는 기능을 합니다.
+  // 장바구니에서 특정 상품을 제거하려면, 현재 장바구니에 있는 상품 리스트에서 해당 상품을 제외한 리스트를 새로운 리스트로 만들어야 합니다. 이를 위해 setCartItems 함수를 호출합니다. 이 함수는 장바구니에 담긴 상품 리스트를 업데이트하는 역할을 합니다.
+  function removeFromCart(id: number) { 
+     // setCartItems 함수의 매개변수로는 현재 장바구니에 담긴 상품 리스트를 나타내는 currItems를 받습니다. 
     setCartItems((currItems) => {
+      // filter 함수를 사용하여 currItems 배열에서 제거하려는 상품을 제외한 새로운 배열을 반환합니다. filter 함수는 제거 조건을 만족하지 않는 항목만 남겨둡니다.
+      // 즉, currItems.filter((item) => item.id !== id)는 currItems 배열에서 id와 일치하는 item을 제거한 새로운 배열을 반환합니다. 이렇게 반환된 배열이 새로운 장바구니에 담긴 상품 리스트가 됩니다.
       return currItems.filter((item) => item.id !== id);
     });
   }
 
+  // 이 코드는 ShoppingCartContext.Provider라는 컴포넌트를 반환하고 있습니다. 이 Provider 컴포넌트는 자식 컴포넌트인 ShoppingCart와 함께 렌더링됩니다.
+  // value prop에는 ShoppingCartContext에 저장되는 데이터가 포함되어 있습니다. 여기에서는 getItemQuantity, increaseCartQuantity, decreaseCartQuantity, removeFromCart, openCart, closeCart, cartItems, cartQuantity 등이 포함됩니다. 이 데이터를 사용하려면 useContext 훅을 사용하여 ShoppingCartContext를 구독(subscribe)해야 합니다.
+  // children prop은 컴포넌트의 자식 컴포넌트를 렌더링하는 데 사용됩니다. 여기에서는 children으로 아마도 App 컴포넌트가 전달될 것으로 예상됩니다. ShoppingCartContext.Provider는 App 컴포넌트의 부모 컴포넌트 중 하나일 것입니다.
   return (
     <ShoppingCartContext.Provider
       value={{

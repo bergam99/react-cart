@@ -4,24 +4,24 @@
         "id":1,
         "name" : "gem",
         "price" : 10.99,
-        "imgUrl" : "imgs/gem.jpg"
+        "imgUrl" : "/imgs/gem.jpg"
     },
     {
         "id":2,
         "name" : "gift",
         "price" : 1199,
-        "imgUrl" : "imgs/gift.jpg"
+        "imgUrl" : "/imgs/gift.jpg"
     },
     {
         "id":3,
         "name" : "letter",
         "price" : 1.05,
-        "imgUrl" : "imgs/letter.jpg"
+        "imgUrl" : "/imgs/letter.jpg"
     },
     {
         "id":4,
         "name" : "cookies",
         "price" : 14000,
-        "imgUrl" : "imgs/cookies.jpg"
+        "imgUrl" : "/imgs/cookies.jpg"
     }
 ]
