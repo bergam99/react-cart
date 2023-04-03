@@ -1,4 +1,3 @@
-import React from "react";
 import storeItems from "../../data/items.json";
 import { useShoppingCart } from "../../context/ShoppingCartContext";
 import formatCurrency from "../../utilities/formatCurrency";
@@ -26,8 +25,8 @@ export function CartItem({ id, quantity }: CartItemProps) {
   return (
     <Stack direction="horizontal" gap={2} className="d-flex align-items-center">
       <img
-        src={item.imgUrl}
-        style={{ width: "125px", height: "75px", objectFit: "cover" }}
+       src={(new URL(item.imgUrl, import.meta.env.BASE_URL)).toString()}
+       style={{ width: "125px", height: "75px", objectFit: "cover" }}
       />
       <div className="me-auto">
         <div>

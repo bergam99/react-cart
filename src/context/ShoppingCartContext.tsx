@@ -29,7 +29,7 @@ type CartItem = {
 // createContext() 함수를 사용하여 ShoppingCartContext 라는 새로운 컨텍스트를 만듭니다.
 // createContext() 함수는 파라미터로 기본값을 받습니다. 이 코드에서는 빈 객체({})를 기본값으로 사용하고 있습니다. 그러나 이 빈 객체는 실제로 ShoppingCartContext 타입이 아니기 때문에 TypeScript가 타입 에러를 발생시킬 것입니다.
 // 따라서 {} 객체를 ShoppingCartContext 타입으로 캐스팅하기 위해 as 연산자를 사용하여 {} as ShoppingCartContext와 같은 형태로 표현하고 있습니다. 이를 통해 TypeScript가 해당 객체를 ShoppingCartContext 타입으로 인식하고 타입 검사를 수행할 수 있도록 합니다.
-// 이렇게 생성된 ShoppingCartContext는 useContext()를 사용하여 해당 컨텍스트를 구독하는 컴포넌트에서 값을 읽거나 업데이트할 수 있습니다. 이를 통해 전역적으로 상태를 관리하고 컴포넌트 간에 데이터를 공유할 수 있습니다. / as + type
+// 이렇게 생성된 ShoppingCartContext는 useContext()를 사용하여 해당 컨텍스트를 구독하는 컴포넌트에서 값을 읽거나 업데이트할 수 있습니다. 이를 통해 전역적으로 상태를 관리하고 컴포넌트 간에 데이터를 공유할 수 있습니다. 
 const ShoppingCartContext = createContext({} as ShoppingCartContext);
 
 // useShoppingCart() 함수는 useContext() 훅을 사용하여 ShoppingCartContext를 구독하고, 해당 컨텍스트의 값을 반환합니다. 이를 통해 전역적으로 관리되는 ShoppingCart의 값을 해당 컴포넌트에서 바로 사용할 수 있습니다.
@@ -57,6 +57,9 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
   //  코드에서 cartItems.reduce() 메서드는 cartItems 배열의 각 요소의 quantity 값을 모두 더한 뒤에 cartQuantity 변수에 할당합니다. 이를 통해 현재 장바구니에 담긴 총 아이템 수를 계산할 수 있습니다. reduce() 메서드는 배열을 순회하면서 quantity 값을 누적시키기 때문에 반복문을 사용하지 않아도 되며, 간단하고 효율적인 방법으로 배열의 값을 합산할 수 있습니다.
   // .reduce() 메소드는 cartItems 배열에 있는 모든 요소의 quantity 값을 합산하여 총 개수를 계산하는 역할을 합니다. reduce() 메소드의 첫 번째 인자로 전달된 콜백 함수에서는 누산기(quantity)와 현재 요소(item)의 quantity 값을 더하여 누산기에 할당하고, 초기값으로 0을 설정했습니다. 따라서 cartQuantity 변수는 cartItems 배열에 있는 모든 요소의 quantity 값을 합산한 결과가 됩니다.
   // cartItems 는 quantity, id 를 갖고 있다.
+// cartItems 배열은 아이템 객체를 포함하고 있고, 각 아이템 객체는 수량(quantity) 속성을 가지고 있을 것으로 예상됩니다. 따라서 cartItems.reduce에서 사용되는 콜백 함수에서 item.quantity는 현재 순회 중인 아이템 객체의 수량 속성 값을 나타냅니다.
+
+// 이 콜백 함수는 reduce() 메서드가 배열의 각 요소를 순회하면서 호출되며, 이전 순회에서 반환된 값(여기서는 quantity)과 현재 순회의 아이템 객체의 수량을 더한 값을 반환합니다. 이렇게 배열의 모든 요소를 순회하면서 각 아이템 객체의 수량을 합산하면, cartQuantity 변수에 전체 장바구니 수량이 할당됩니다.
   const cartQuantity = cartItems.reduce(
     (quantity, item) => item.quantity + quantity,
     0
@@ -64,7 +67,6 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
 
   //   FUNCTIONS
   // 장바구니에서 해당 아이템의 수량을 가져오는 함수입니다.
-  // 장바구니에 담긴 아이템들이 cartItems 배열에 저장되어 있으며, getItemQuantity 함수는 id 매개변수로 받은 아이템의 수량을 찾아 반환합니다.
   // 장바구니에 담긴 아이템들이 cartItems 배열에 저장되어 있으며, getItemQuantity 함수는 id 매개변수로 받은 아이템의 수량을 찾아 반환합니다.
   // 먼저 cartItems 배열에서 find 메서드를 사용하여 해당 아이템을 찾습니다. find 메서드는 주어진 조건을 만족하는 첫 번째 요소를 반환합니다. 여기서는 item.id === id 조건으로 해당 아이템을 찾습니다.
   // 그 다음에는 옵셔널 체이닝(?.)을 사용하여 찾은 아이템의 quantity 속성을 반환합니다. ?. 연산자는 해당 객체나 속성이 존재하면 그 값을 반환하고, 그렇지 않으면 undefined를 반환합니다. 만약 quantity 속성이 undefined이면 0을 반환합니다.
@@ -79,7 +81,6 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
 // const [cartItems, setCartItems] = useLocalStorage<CartItem[]>(
   // 이 함수의 매개변수는 id입니다. 이 함수는 장바구니에서 id에 해당하는 상품의 수량을 증가시키는 역할을 합니다.
   // currItems는 setCartItems를 호출할 때 인자로 전달된 함수에서 파라미터로 받은 변수입니다.
-
 // setCartItems는 현재 cartItems 값을 업데이트하기 위해 사용됩니다. setCartItems는 새로운 값을 받아 해당 값을 cartItems에 업데이트하는 함수입니다.
 // 파라미터로 전달된 함수는 이전 cartItems 값을 받아서 새로운 값을 계산하고, 이를 setCartItems에 전달합니다. 그리고 setCartItems는 이 값을 cartItems에 반영합니다.
 // 따라서, currItems는 현재 cartItems의 상태를 가지고 있는 변수입니다. 함수 내에서 이전 cartItems 상태를 변경하지 않기 때문에 currItems는 이전 cartItems와 동일한 값을 가집니다.
